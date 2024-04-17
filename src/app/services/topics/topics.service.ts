@@ -9,7 +9,7 @@ import { Author } from 'src/app/interfaces/author.interface';
 @Injectable({
   providedIn: 'root'
 })
-export class TopicsService {
+export class TopicService {
 
   constructor(private httpClient: HttpClient) { }
 
@@ -32,7 +32,7 @@ export class TopicsService {
     });
   }
 
-  public addComment(comment: string, topicId: number, author: Author, commentId?: number): Observable<any> {
+  public addNewComment(comment: string, topicId: number, author: Author, commentId?: number): Observable<any> {
     if (commentId === null || commentId === undefined) {
       return this.httpClient.post<any>(`${apiUrl}/topic/${topicId}/comment/add`, {
         body: comment,

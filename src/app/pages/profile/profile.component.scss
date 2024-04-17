@@ -1,0 +1,13 @@
+.profile-container {
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+
+    form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: baseline;
+    }
+}

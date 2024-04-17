@@ -1,0 +1,46 @@
+<div class="profile-container">
+    <h2>Profile Page</h2>
+    <form [formGroup]="profileDataFormGroup">
+        <mat-form-field>
+            <mat-label>Name</mat-label>
+            <input matInput formControlName="name">
+            <mat-error
+                *ngIf="profileDataFormGroup.get('name')?.hasError('minlength') || profileDataFormGroup.get('name')?.hasError('required')">Minimum
+                5 characters!</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input type="password" matInput formControlName="password">
+            <mat-error
+                *ngIf="profileDataFormGroup.get('password')?.hasError('invalidPassword') || profileDataFormGroup.get('password')?.hasError('required')">Minimum
+                8 characters,
+                at
+                least 1 uppercase letter, at least 1 lowercase letter, at least 1 digit!</mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Confirm Password</mat-label>
+            <input type="password" matInput formControlName="confirmPassword">
+        </mat-form-field>
+        <mat-error *ngIf="profileDataFormGroup.hasError('passwordsNotMatch')">Passwords do
+            not match!</mat-error>
+        <button mat-raised-button color="primary" (click)="changeData()">Change data</button>
+    </form>
+    <div *ngIf="!!userService.currentrole">Role: {{ userService.currentrole.name }}</div>
+    <h3>Permissions:</h3>
+    <ul *ngIf="!!userService.currentrole">
+        <li [style.color]=" userService.canRead() ? 'green' : 'red' "> Read Comments</li>
+        <li [style.color]=" userService.canModifyComments() ? 'green' : 'red' ">Add/Delete
+            Comments</li>
+        <li [style.color]=" userService.canModifyTopics() ? 'green' : 'red' ">Add/Delete
+            Topics</li>
+        <li [style.color]=" userService.canModifyOthers() ? 'green' : 'red' ">Delete
+            Others' Comments/Topics
+        </li>
+    </ul>
+    <div>Total comments by this user: {{ userService.totalCommentsByUser() }}</div>
+    <div>Topics commented by this user: {{ userService.topicsCommentedByUser() }}</div>
+</div>

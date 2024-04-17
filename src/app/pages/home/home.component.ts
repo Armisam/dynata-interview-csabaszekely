@@ -5,7 +5,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { Topic } from 'src/app/interfaces/topic.interface';
-import { TopicsService } from 'src/app/services/topics/topics.service';
+import { TopicService } from 'src/app/services/topics/topics.service';
 import { TopicFormData } from './interfaces/topic-form-data.interface';
 import { Comment, CommentNode } from 'src/app/interfaces/comment.interface';
 import { UserService } from 'src/app/services/users/user.service';
@@ -25,9 +25,7 @@ export class HomeComponent implements OnInit {
   public hasChild = (_: number, node: CommentNode) => !!node.comments && node.comments.length > 0;
   public newComment = new FormControl('', Validators.required);
 
-  private currentUser = this.userService.currentUser();
-
-  constructor(private topicsService: TopicsService, private formBuilder: FormBuilder, private userService: UserService) { }
+  constructor(private topicService: TopicService, private formBuilder: FormBuilder, public userService: UserService) { }
 
   ngOnInit(): void {
     this.addNewTopicFormGroup = this.formBuilder.group({
@@ -35,7 +33,7 @@ export class HomeComponent implements OnInit {
       body: ['', Validators.required]
     });
 
-    this.topicsService.getTopics().pipe(take(1)).subscribe((object) => {
+    this.topicService.getTopics().pipe(take(1)).subscribe((object) => {
       this.topics = object.data;
     });
   }
@@ -47,7 +45,7 @@ export class HomeComponent implements OnInit {
     }
 
     const topicFormData: TopicFormData = this.addNewTopicFormGroup.value;
-    this.topicsService.addTopic(topicFormData, this.currentUser).subscribe((object) => this.topics.push(object.data));
+    this.topicService.addTopic(topicFormData, this.userService.currentUser()).pipe(take(1)).subscribe((object) => this.topics.push(object.data));
   }
 
   public onOpenTopic(topicId: number) {
@@ -59,17 +57,20 @@ export class HomeComponent implements OnInit {
       return;
     }
 
-    this.topicsService.addComment(comment, topicId, this.currentUser, commentId).pipe(switchMap(() => this.topicsService.getTopicById(topicId))).subscribe((object) => {
+    this.topicService.addNewComment(comment, topicId, this.userService.currentUser(), commentId).pipe(switchMap(() => this.topicService.getTopicById(topicId))).subscribe((object) => {
       const topicWhereCommentAdded = this.topics.findIndex((topic) => topic.id === topicId);
       if (topicWhereCommentAdded === -1) {
         return;
       }
       this.topics[topicWhereCommentAdded] = object.data;
+      const { comments, topics } = this.userService.getCommentsAndTopicsByAuthor(object.data, this.userService.currentUser().id);
+      this.userService.totalCommentsByUser.set(comments);
+      this.userService.topicsCommentedByUser.set(topics);
     });
   }
 
   public deleteComment(topicId: number, commentId: number): void {
-    this.topicsService.deleteComment(topicId, commentId).pipe(switchMap(() => this.topicsService.getTopicById(topicId))).subscribe((object) => {
+    this.topicService.deleteComment(topicId, commentId).pipe(switchMap(() => this.topicService.getTopicById(topicId))).subscribe((object) => {
       const topicWhereCommentAdded = this.topics.findIndex((topic) => topic.id === topicId);
       if (topicWhereCommentAdded === -1) {
         return;
