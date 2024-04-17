@@ -1,0 +1,13 @@
+<header>
+    <nav>
+        <a routerLink="/home" routerLinkActive="active">Home</a>
+        <a routerLink="/profile" routerLinkActive="active">Profile</a>
+        <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    </nav>
+    <mat-form-field>
+        <mat-label>Select User</mat-label>
+        <mat-select [formControl]="userSelector" (valueChange)="onSelectUser()">
+            <mat-option *ngFor="let user of users;" [value]="user.id">{{ user.name }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</header>

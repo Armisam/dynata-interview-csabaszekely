@@ -4,18 +4,18 @@
     display: flex;
     flex-direction: column;
 
-    .example-tree ul,
-    .example-tree li {
+    .comment-tree ul,
+    .comment-tree li {
         margin-top: 0;
         margin-bottom: 0;
         list-style-type: none;
     }
 
-    .example-tree .mat-nested-tree-node div[role=group] {
+    .comment-tree .mat-nested-tree-node div[role=group] {
         padding-left: 20px;
     }
 
-    .example-tree div[role=group]>.mat-tree-node {
+    .comment-tree div[role=group]>.mat-tree-node {
         padding-left: 20px;
     }
 

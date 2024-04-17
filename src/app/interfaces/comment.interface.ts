@@ -5,6 +5,7 @@ export interface Comment {
     body: string;
     author: Author;
     comments: Comment[];
+    removed: boolean;
 }
 
 export interface CommentNode extends Comment {

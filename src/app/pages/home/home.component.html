@@ -8,57 +8,62 @@
                     {{ topic.title }}
                 </mat-panel-title>
                 <mat-panel-description>
-                    {{ topic.body }}
+                    {{ topic.body }} created by: {{ topic.author.name }}
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-tree *ngIf="!!topic.comments && topic.comments.length > 0" [dataSource]="dataSource"
-                [treeControl]="treeControl" class="example-tree">
+                [treeControl]="treeControl" class="comment-tree">
                 <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle>
-                    <div class="comment">
+                    <div class="comment" [style.background-color]="node.removed ? 'red': 'white'">
                         <div>
                             <span class="author">{{node.author.name}}:</span> {{node.body}}
+                            <button mat-button (click)="deleteComment(topic.id, node.id)">delete</button>
                         </div>
                         <div class="new-comment">
                             <mat-form-field>
-                                <mat-label>Type your comment!</mat-label>
+                                <mat-label>Comment the comment!</mat-label>
                                 <textarea matInput [(ngModel)]="node.newComment" required></textarea>
                                 <mat-error *ngIf="!node.newComment">This field is required!</mat-error>
                             </mat-form-field>
-                            <button mat-raised-button color="primary" (click)="addNewComment(topic.id, node.id)">Add
+                            <button mat-raised-button color="primary"
+                                (click)="addNewComment(node.newComment, topic.id, node.id)">Add
                                 Comment</button>
                         </div>
                     </div>
                 </mat-tree-node>
                 <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
-                    <div class="comment">
+                    <div class="comment" [style.background-color]="node.removed ? 'red': 'white'">
                         <div>
                             <span class="author">{{node.author.name}}:</span> {{node.body}}
+                            <button mat-button (click)="deleteComment(topic.id, node.id)">delete</button>
                         </div>
                         <div class="new-comment">
                             <mat-form-field>
-                                <mat-label>Type your comment!</mat-label>
-                                <textarea matInput [(ngModel)]="node.newComment" required=""></textarea>
+                                <mat-label>Comment the comment!</mat-label>
+                                <textarea matInput [(ngModel)]="node.newComment" required></textarea>
                                 <mat-error *ngIf="!node.newComment">This field is required!</mat-error>
                             </mat-form-field>
-                            <button mat-raised-button color="primary" (click)="addNewComment(topic.id, node.id)">Add
+                            <button mat-raised-button color="primary"
+                                (click)="addNewComment(node.newComment, topic.id, node.id)">Add
                                 Comment</button>
                         </div>
                     </div>
-                    <div [class.example-tree-invisible]="!treeControl.isExpanded(node)" role="group">
+                    <div [class.comment-tree-invisible]="!treeControl.isExpanded(node)" role="group">
                         <ng-container matTreeNodeOutlet></ng-container>
                     </div>
                 </mat-nested-tree-node>
             </mat-tree>
-            <div *ngIf="!topic.comments || topic.comments.length === 0" class="new-comment">
+            <div class="new-comment">
                 <mat-form-field>
-                    <mat-label>Type your comment!</mat-label>
+                    <mat-label>Comment the topic!</mat-label>
                     <textarea matInput [formControl]="newComment"></textarea>
                     <mat-error *ngIf="newComment.hasError('required')">
                         This field is required!
                     </mat-error>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" (click)="addNewComment(topic.id)">Add Comment</button>
+                <button mat-raised-button color="primary" (click)="addNewComment(newComment.value || '', topic.id)">Add
+                    Comment</button>
             </div>
         </mat-expansion-panel>
     </mat-accordion>

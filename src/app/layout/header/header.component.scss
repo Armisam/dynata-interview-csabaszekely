@@ -1,0 +1,26 @@
+header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    padding: 5px 20px;
+    background-color: aqua;
+    color: white;
+    min-height: 50px;
+
+    nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        a {
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+
+            .active {
+                color: blue;
+            }
+        }
+    }
+}
