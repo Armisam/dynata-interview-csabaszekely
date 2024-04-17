@@ -1,0 +1,52 @@
+<div class="admin-container">
+    <h2>Admin Page</h2>
+    <div *ngIf="!!roles">
+        <mat-form-field>
+            <mat-label>Select Role</mat-label>
+            <mat-select [formControl]="roleSelector" (selectionChange)="onRoleChange()">
+                <mat-option *ngFor="let role of roles;" [value]="role.id">{{ role.name }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-form-field>
+            <mat-label>Rename role</mat-label>
+            <input matInput [formControl]="roleNameInput">
+        </mat-form-field>
+    </div>
+
+    <div>
+        <mat-form-field>
+            <mat-label>Select Permissions</mat-label>
+            <mat-select [formControl]="permissionSelector" multiple>
+                <mat-option [value]="1">Read comments</mat-option>
+                <mat-option [value]="2">Add/delete comments</mat-option>
+                <mat-option [value]="4">Add/delete topics</mat-option>
+                <mat-option [value]="8">Delete others' comments/topics</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <div class="drag-and-drop-holder" cdkDropListGroup>
+        <div *ngIf="!!selectedRoleUsers && selectedRoleUsers.length > 0">
+            <h3>Selected role users</h3>
+
+            <div cdkDropList [cdkDropListData]="selectedRoleUsers" (cdkDropListDropped)="drop($event)">
+                <div *ngFor="let user of selectedRoleUsers" cdkDrag>{{user.name}}</div>
+            </div>
+        </div>
+
+        <div *ngIf="!!others && others.length > 0">
+            <h3>Others</h3>
+
+            <div cdkDropList [cdkDropListData]="others" (cdkDropListDropped)="drop($event)">
+                <div *ngFor="let user of others" cdkDrag>{{user.name}}</div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <button mat-raised-button color="primary" (click)="save()">Save</button>
+    </div>
+</div>

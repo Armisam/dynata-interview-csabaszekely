@@ -9,6 +9,8 @@
                 </mat-panel-title>
                 <mat-panel-description>
                     {{ topic.body }} created by: {{ topic.author.name }}
+                    <button mat-button *ngIf="userService.canModifyTopics()"
+                        (click)="deleteTopic(topic.id)">delete</button>
                 </mat-panel-description>
             </mat-expansion-panel-header>
             <mat-tree *ngIf="!!topic.comments && topic.comments.length > 0" [dataSource]="dataSource"
@@ -17,9 +19,12 @@
                     <div class="comment" [style.background-color]="node.removed ? 'red': 'white'">
                         <div>
                             <span class="author">{{node.author.name}}:</span> {{node.body}}
-                            <button mat-button (click)="deleteComment(topic.id, node.id)">delete</button>
+                            <button mat-button
+                                *ngIf="(node.author.id === userService.currentUser().id && userService.canModifyComments()) || userService.canModifyOthers()"
+                                (click)="deleteComment(topic.id, node.id)">delete</button>
                         </div>
-                        <div class="new-comment">
+                        <div class="new-comment"
+                            *ngIf="userService.canModifyComments() || userService.canModifyOthers()">
                             <mat-form-field>
                                 <mat-label>Comment the comment!</mat-label>
                                 <textarea matInput [(ngModel)]="node.newComment" required></textarea>
@@ -35,9 +40,12 @@
                     <div class="comment" [style.background-color]="node.removed ? 'red': 'white'">
                         <div>
                             <span class="author">{{node.author.name}}:</span> {{node.body}}
-                            <button mat-button (click)="deleteComment(topic.id, node.id)">delete</button>
+                            <button mat-button
+                                *ngIf="(node.author.id === userService.currentUser().id && userService.canModifyComments()) || userService.canModifyOthers()"
+                                (click)="deleteComment(topic.id, node.id)">delete</button>
                         </div>
-                        <div class="new-comment">
+                        <div class="new-comment"
+                            *ngIf="userService.canModifyComments() || userService.canModifyOthers()">
                             <mat-form-field>
                                 <mat-label>Comment the comment!</mat-label>
                                 <textarea matInput [(ngModel)]="node.newComment" required></textarea>
@@ -53,7 +61,7 @@
                     </div>
                 </mat-nested-tree-node>
             </mat-tree>
-            <div class="new-comment">
+            <div class="new-comment" *ngIf="userService.canModifyComments() || userService.canModifyOthers()">
                 <mat-form-field>
                     <mat-label>Comment the topic!</mat-label>
                     <textarea matInput [formControl]="newComment"></textarea>
@@ -68,7 +76,7 @@
         </mat-expansion-panel>
     </mat-accordion>
 
-    <form [formGroup]="addNewTopicFormGroup">
+    <form [formGroup]="addNewTopicFormGroup" *ngIf="userService.canModifyOthers() || userService.canModifyTopics()">
         <mat-form-field>
             <mat-label>Title</mat-label>
             <input matInput formControlName="title">

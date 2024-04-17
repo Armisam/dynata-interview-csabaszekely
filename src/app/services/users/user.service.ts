@@ -6,7 +6,8 @@ import { Author } from 'src/app/interfaces/author.interface';
 import { Role } from 'src/app/interfaces/role.interface';
 import { Comment } from 'src/app/interfaces/comment.interface';
 import { Topic } from 'src/app/interfaces/topic.interface';
-import { TopicService } from '../topics/topics.service';
+import { TopicService } from '../topics/topic.service';
+import { RoleService } from '../roles/role.service';
 
 
 @Injectable({
@@ -14,7 +15,7 @@ import { TopicService } from '../topics/topics.service';
 })
 export class UserService {
 
-  public users: WritableSignal<Author[]> = signal([]);
+  public users: Author[] = [];
   public currentrole!: Role;
   public currentUser: WritableSignal<Author> = signal({ id: 0, name: '', password: '', email: '', role: 0, });
 
@@ -27,12 +28,15 @@ export class UserService {
   public topicsCommentedByUser: WritableSignal<number> = signal(0);
 
 
-  constructor(private httpClient: HttpClient, private topicService: TopicService) {
-    this.getUsers().pipe(take(1)).subscribe((object) => this.users.set(object.data));
+  constructor(private httpClient: HttpClient, private topicService: TopicService, private roleService: RoleService) {
+    this.getUsers().pipe(take(1)).subscribe((object) =>
+      this.users = object.data
+    );
+
     this.getUserById(0).pipe(take(1)).subscribe((object) => this.currentUser.set(object.data));
 
     effect(() => {
-      this.getRoleById(this.currentUser().role).pipe(take(1)).subscribe((object) => {
+      this.roleService.getRoleById(this.currentUser().role).pipe(take(1)).subscribe((object) => {
         this.currentrole = object.data;
 
         this.canRead.set(this.currentrole.rights === 1 || this.currentrole.rights === 3 || this.currentrole.rights === 5 || this.currentrole.rights === 7 || this.currentrole.rights === 9 || this.currentrole.rights === 11 || this.currentrole.rights === 13 || this.currentrole.rights === 15);
@@ -47,12 +51,8 @@ export class UserService {
           this.topicsCommentedByUser.set(topics)
         });
 
-      this.users()[this.users().findIndex((user) => user.id === this.currentUser().id)] == this.currentUser();
+      this.users[this.users.findIndex((user) => user.id === this.currentUser().id)] == this.currentUser();
     });
-  }
-
-  public getRoleById(roleId: number): Observable<any> {
-    return this.httpClient.get<any>(`${apiUrl}/role/${roleId}`);
   }
 
   public getUsers(): Observable<any> {

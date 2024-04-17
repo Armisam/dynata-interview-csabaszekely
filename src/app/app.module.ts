@@ -9,19 +9,22 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTreeModule } from '@angular/material/tree';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './pages/home/home.component';
 import { HeaderComponent } from './layout/header/header.component';
 import { ProfileComponent } from './pages/profile/profile.component';
+import { AdminComponent } from './pages/admin/admin.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     HeaderComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,8 @@ import { ProfileComponent } from './pages/profile/profile.component';
     MatInputModule,
     MatButtonModule,
     MatTreeModule,
-    MatSelectModule
+    MatSelectModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

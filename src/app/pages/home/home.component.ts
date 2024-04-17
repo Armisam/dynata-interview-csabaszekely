@@ -5,7 +5,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { MatTreeNestedDataSource } from '@angular/material/tree';
 
 import { Topic } from 'src/app/interfaces/topic.interface';
-import { TopicService } from 'src/app/services/topics/topics.service';
+import { TopicService } from 'src/app/services/topics/topic.service';
 import { TopicFormData } from './interfaces/topic-form-data.interface';
 import { Comment, CommentNode } from 'src/app/interfaces/comment.interface';
 import { UserService } from 'src/app/services/users/user.service';
@@ -46,6 +46,10 @@ export class HomeComponent implements OnInit {
 
     const topicFormData: TopicFormData = this.addNewTopicFormGroup.value;
     this.topicService.addTopic(topicFormData, this.userService.currentUser()).pipe(take(1)).subscribe((object) => this.topics.push(object.data));
+  }
+
+  public deleteTopic(topicId: number): void {
+    this.topicService.deleteTopic(topicId).pipe(switchMap(() => this.topicService.getTopics())).subscribe((object) => this.topics = object.data);
   }
 
   public onOpenTopic(topicId: number) {

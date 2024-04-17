@@ -14,7 +14,7 @@ export class HeaderComponent {
   constructor(public userService: UserService) { }
 
   public onSelectUser() {
-    const selctedUser = this.userService.users().filter((user) => user.id === this.userSelector.value)[0];
+    const selctedUser = this.userService.users.filter((user) => user.id === this.userSelector.value)[0];
     if (!!selctedUser) {
       this.userService.currentUser.set(selctedUser);
     }

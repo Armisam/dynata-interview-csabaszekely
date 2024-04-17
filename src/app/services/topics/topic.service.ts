@@ -32,6 +32,10 @@ export class TopicService {
     });
   }
 
+  public deleteTopic(topicId: number): Observable<any> {
+    return this.httpClient.delete<any>(`${apiUrl}/topic/${topicId}`);
+  }
+
   public addNewComment(comment: string, topicId: number, author: Author, commentId?: number): Observable<any> {
     if (commentId === null || commentId === undefined) {
       return this.httpClient.post<any>(`${apiUrl}/topic/${topicId}/comment/add`, {

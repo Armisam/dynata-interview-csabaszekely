@@ -1,0 +1,11 @@
+.admin-container {
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+
+    .drag-and-drop-holder {
+        display: flex;
+        gap: 20px;
+    }
+}
